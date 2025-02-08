@@ -1278,6 +1278,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 115a9bfeb949040edbfbaa8c3d92a4ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chatDisplay: {fileID: 1289102679}
+  inputField: {fileID: 520664972}
+  sendButton: {fileID: 1106907106}
+  scrollRect: {fileID: 374804136}
 --- !u!4 &1143824936
 Transform:
   m_ObjectHideFlags: 0
@@ -1443,7 +1447,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1377459008
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1510,7 +1514,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -0.000091552734}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1447434233
