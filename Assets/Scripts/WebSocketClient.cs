@@ -2,6 +2,7 @@ using UnityEngine;
 using WebSocketSharp;
 using TMPro;
 using UnityEngine.UI;
+using System.Collections;
 
 public class BasicWebSocketClient : MonoBehaviour
 {
@@ -12,6 +13,9 @@ public class BasicWebSocketClient : MonoBehaviour
     public TMP_InputField inputField; // Input donde el usuario escribe
     public Button sendButton; // Botón para enviar mensajes
     public ScrollRect scrollRect; // Scroll View para manejar el desplazamiento
+
+    private const int maxRetries = 5;
+    private const float retryDelay = 2f;
 
     // Se ejecuta al iniciar la escena
     void Start()
@@ -43,8 +47,7 @@ public class BasicWebSocketClient : MonoBehaviour
             Debug.Log("WebSocket cerrado. Código: " + e.Code + ", Razón: " + e.Reason);
         };
 
-        // Conectar de forma asíncrona al servidor WebSocket
-        ws.ConnectAsync();
+        StartCoroutine(ConectarAlServidor());
 
         // Dar foco automático al input al iniciar
         inputField.Select();
@@ -88,5 +91,26 @@ public class BasicWebSocketClient : MonoBehaviour
     {
         Canvas.ForceUpdateCanvases();
         scrollRect.verticalNormalizedPosition = 0f;
+    }
+
+    private IEnumerator ConectarAlServidor()
+    {
+        int attempt = 0;
+        while (attempt < maxRetries)
+        {
+            ws.ConnectAsync();
+            yield return new WaitForSeconds(retryDelay);
+
+            if (ws.ReadyState == WebSocketState.Open)
+            {
+                Debug.Log("Conexión establecida después de " + (attempt + 1) + " intentos.");
+                yield break;
+            }
+
+            attempt++;
+            Debug.Log("Reintentando conexión... Intento " + attempt);
+        }
+
+        Debug.LogError("No se pudo establecer la conexión después de " + maxRetries + " intentos.");
     }
 }
