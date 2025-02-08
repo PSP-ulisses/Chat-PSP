@@ -1,10 +1,17 @@
 using UnityEngine;
 using WebSocketSharp;
+using TMPro;
+using UnityEngine.UI;
 
 public class BasicWebSocketClient : MonoBehaviour
 {
     // Instancia del cliente WebSocket
     private WebSocket ws;
+
+    public TMP_Text chatDisplay;  // Texto donde se muestra el historial del chat
+    public TMP_InputField inputField; // Input donde el usuario escribe
+    public Button sendButton; // Botón para enviar mensajes
+    public ScrollRect scrollRect; // Scroll View para manejar el desplazamiento
 
     // Se ejecuta al iniciar la escena
     void Start()
@@ -38,6 +45,20 @@ public class BasicWebSocketClient : MonoBehaviour
 
         // Conectar de forma asíncrona al servidor WebSocket
         ws.ConnectAsync();
+
+        // Dar foco automático al input al iniciar
+        inputField.Select();
+        inputField.ActivateInputField();
+
+        sendButton.onClick.AddListener(OnSendButtonClick);
+        inputField.onSubmit.AddListener(delegate { OnSendButtonClick(); });
+    }
+
+    public void OnSendButtonClick()
+    {
+        SendMessageToServer(inputField.text);
+        inputField.text = "";
+        inputField.ActivateInputField();
     }
 
     // Método para enviar un mensaje al servidor (puedes llamarlo, por ejemplo, desde un botón en la UI)
@@ -61,5 +82,11 @@ public class BasicWebSocketClient : MonoBehaviour
             ws.Close();
             ws = null;
         }
+    }
+
+    void ScrollToBottom()
+    {
+        Canvas.ForceUpdateCanvases();
+        scrollRect.verticalNormalizedPosition = 0f;
     }
 }
