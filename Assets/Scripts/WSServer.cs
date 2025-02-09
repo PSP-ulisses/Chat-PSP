@@ -45,4 +45,10 @@ public class EchoBehavior : WebSocketBehavior
         // Envía de vuelta el mismo mensaje recibido.
         Send(e.Data);
     }
+
+    // Se invoca cuando se establece la conexión con un cliente.
+    protected override void OnOpen()
+    {
+        Debug.Log("Cliente conectado.");
+    }
 }
