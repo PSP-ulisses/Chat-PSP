@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine.UI;
 using System.Collections;
 
-public class WebSocketClient : MonoBehaviour
+public class WSClient : MonoBehaviour
 {
     // Instancia del cliente WebSocket
     private WebSocket ws;
