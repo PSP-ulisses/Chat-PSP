@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using WebSocketSharp;
 using WebSocketSharp.Server;
@@ -7,6 +9,11 @@ public class WSServer : MonoBehaviour
 {
     // Instancia del servidor WebSocket.
     private WebSocketServer wss;
+
+    private static List<ClienteDelChat> clientes = new List<ClienteDelChat>();
+
+    // Cola de acciones para ejecutar en el hilo principal de Unity.
+    private readonly Queue<Action> _actionsToRun = new Queue<Action>();
 
     // Se ejecuta al iniciar la escena.
     void Start()
@@ -34,6 +41,38 @@ public class WSServer : MonoBehaviour
             Debug.Log("Servidor WebSocket detenido.");
         }
     }
+
+    private void EnqueueUIAction(Action action)
+    {
+        lock (_actionsToRun)
+        {
+            _actionsToRun.Enqueue(action);
+        }
+    }
+
+    void Update()
+    {
+        if (_actionsToRun.Count > 0)
+        {
+            Action action;
+
+            lock (_actionsToRun)
+            {
+                action = _actionsToRun.Dequeue();
+            }
+
+            action?.Invoke();
+        }
+    }
+
+    public static void nuevoCliente() // TODO: Cambiar a privado
+    {
+        string id = Guid.NewGuid().ToString();
+        string color = "#" + ColorUtility.ToHtmlStringRGB(UnityEngine.Random.ColorHSV());
+        clientes.Add(new ClienteDelChat(id, color));
+
+        Debug.Log("Nuevo cliente conectado: " + id);
+    }
 }
 
 // Comportamiento básico del servicio WebSocket: simplemente devuelve el mensaje recibido.
@@ -49,6 +88,18 @@ public class EchoBehavior : WebSocketBehavior
     // Se invoca cuando se establece la conexión con un cliente.
     protected override void OnOpen()
     {
-        Debug.Log("Cliente conectado.");
+        WSServer.nuevoCliente();
+    }
+}
+
+public class ClienteDelChat
+{
+    string id;
+    string color;
+
+    public ClienteDelChat(string id, string color)
+    {
+        this.id = id;
+        this.color = color;
     }
 }
