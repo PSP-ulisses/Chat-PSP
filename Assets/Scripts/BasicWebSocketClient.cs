@@ -31,7 +31,7 @@ public class BasicWebSocketClient : MonoBehaviour
         {
             if (e.Data.StartsWith("NewID:"))
             {
-                id = int.Parse(e.Data.Substring(6));
+                id = int.Parse(e.Data[6..]);
                 Debug.Log("Soy el cliente con ID: " + id);
             }
             else
@@ -61,7 +61,15 @@ public class BasicWebSocketClient : MonoBehaviour
     {
         if (ws != null && ws.ReadyState == WebSocketState.Open)
         {
-            ws.Send(message);
+            if (!message.StartsWith("NewID:"))
+            {
+                ws.Send(id + ": " + message);
+            }
+            else
+            {
+                // TODO: Hacerlo más serio.
+                Debug.LogError("Vas de listo pero he capturado tu trampa.");
+            }
         }
         else
         {
