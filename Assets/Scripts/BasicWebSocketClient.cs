@@ -1,10 +1,17 @@
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using WebSocketSharp;
 
 public class BasicWebSocketClient : MonoBehaviour
 {
     // Instancia del cliente WebSocket
     private WebSocket ws;
+
+    public TMP_Text chatDisplay;  // Texto donde se muestra el historial del chat
+    public TMP_InputField inputField; // Input donde el usuario escribe
+    public Button sendButton; // Botón para enviar mensajes
+    public ScrollRect scrollRect; // Scroll View para manejar el desplazamiento
 
     // Se ejecuta al iniciar la escena
     void Start()
