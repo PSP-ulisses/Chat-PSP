@@ -35,11 +35,6 @@ public class BasicWebSocketServer : MonoBehaviour
             Debug.Log("Servidor WebSocket detenido.");
         }
     }
-
-    public static void ClienteConectado(Cliente cliente)
-    {
-        Debug.Log("Cliente conectado: " + cliente.ToString() + ".");
-    }
 }
 
 public class ChatBehavior : WebSocketBehavior
@@ -57,7 +52,7 @@ public class ChatBehavior : WebSocketBehavior
     protected override void OnOpen()
     {
         clientes.Add(new Cliente(clientes.Count, "#" + Random.ColorHSV().ToHexString()));
-        BasicWebSocketServer.ClienteConectado(clientes[^1]);
+        Debug.Log("Cliente conectado: " + clientes[^1]);
     }
 }
 
