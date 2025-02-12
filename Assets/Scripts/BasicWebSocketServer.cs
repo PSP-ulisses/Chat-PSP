@@ -52,7 +52,18 @@ public class ChatBehavior : WebSocketBehavior
     protected override void OnOpen()
     {
         _numOfClients++;
-        Debug.Log("Cliente con id: " + _numOfClients + " conectado.");
+        LogServidor("Cliente con id: " + _numOfClients + " conectado.");
         Send("NewID:" + _numOfClients);
+    }
+
+    // Se invoca cuando se cierra la conexión con un cliente.
+    protected override void OnClose(CloseEventArgs e)
+    {
+        LogServidor("Se ha desconectado un cliente.");
+    }
+
+    private void LogServidor(string data)
+    {
+        Debug.Log("<color=yellow>SERVb:</color> " + data);
     }
 }

@@ -33,6 +33,7 @@ public class BasicWebSocketClient : MonoBehaviour
             {
                 id = int.Parse(e.Data[6..]);
                 Debug.Log("Soy el cliente con ID: " + id);
+                ws.Close();
             }
             else
             {
@@ -49,7 +50,8 @@ public class BasicWebSocketClient : MonoBehaviour
         // Evento OnClose: se invoca cuando se cierra la conexión con el servidor
         ws.OnClose += (sender, e) =>
         {
-            Debug.Log("WebSocket cerrado. Código: " + e.Code + ", Razón: " + e.Reason);
+            Debug.Log("Soy el cliente con ID: " + id + ", y me voy a cerrar.");
+            SendMessageToServer("closing:" + id);
         };
 
         // Conectar de forma asíncrona al servidor WebSocket
