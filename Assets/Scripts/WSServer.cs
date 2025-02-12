@@ -67,7 +67,7 @@ public class WSServer : MonoBehaviour
 
     public static void nuevoCliente() // TODO: Cambiar a privado
     {
-        string id = Guid.NewGuid().ToString();
+        string id = Guid.NewGuid().ToString(); // TODO: Intentar eliminar la asignación
 
         clientes.Add(new ClienteDelChat(
             id,
