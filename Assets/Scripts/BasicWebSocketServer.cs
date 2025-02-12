@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using WebSocketSharp;
 using WebSocketSharp.Server;
@@ -49,14 +50,20 @@ public class ChatBehavior : WebSocketBehavior
         // Envía de vuelta el mismo mensaje recibido.
         Send(e.Data);
     }
+
+    protected override void OnOpen()
+    {
+        clientes.Add(new Cliente(clientes.Count, "#" + Random.ColorHSV().ToHexString()));
+        Debug.Log("Cliente conectado. ID: " + clientes[clientes.Count - 1].id + ", Color: " + clientes[clientes.Count - 1].color);
+    }
 }
 
 public class Cliente
 {
-    public string id;
+    public int id;
     public string color;
 
-    public Cliente(string id, string color)
+    public Cliente(int id, string color)
     {
         this.id = id;
         this.color = color;
