@@ -52,6 +52,5 @@ public class ChatBehavior : WebSocketBehavior
     protected override void OnOpen()
     {
         clientes.Add(new Cliente(clientes.Count, "#" + Random.ColorHSV().ToHexString()));
-        Debug.Log("Cliente conectado: " + clientes[^1]);
     }
 }
