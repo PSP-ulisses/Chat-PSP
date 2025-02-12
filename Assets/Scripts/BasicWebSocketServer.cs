@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using WebSocketSharp;
 using WebSocketSharp.Server;
@@ -39,10 +40,25 @@ public class BasicWebSocketServer : MonoBehaviour
 
 public class ChatBehavior : WebSocketBehavior
 {
+
+    private static List<Cliente> clientes = new List<Cliente>();
+
     // Se invoca cuando se recibe un mensaje desde un cliente.
     protected override void OnMessage(MessageEventArgs e)
     {
         // Envía de vuelta el mismo mensaje recibido.
         Send(e.Data);
+    }
+}
+
+public class Cliente
+{
+    public string id;
+    public string color;
+
+    public Cliente(string id, string color)
+    {
+        this.id = id;
+        this.color = color;
     }
 }
