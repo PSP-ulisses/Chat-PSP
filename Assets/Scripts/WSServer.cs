@@ -68,8 +68,11 @@ public class WSServer : MonoBehaviour
     public static void nuevoCliente() // TODO: Cambiar a privado
     {
         string id = Guid.NewGuid().ToString();
-        string color = "#" + ColorUtility.ToHtmlStringRGB(UnityEngine.Random.ColorHSV());
-        clientes.Add(new ClienteDelChat(id, color));
+
+        clientes.Add(new ClienteDelChat(
+            id,
+            "#" + ColorUtility.ToHtmlStringRGB(UnityEngine.Random.ColorHSV())
+            ));
 
         Debug.Log("Nuevo cliente conectado: " + id);
     }
