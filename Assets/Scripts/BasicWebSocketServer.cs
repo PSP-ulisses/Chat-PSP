@@ -40,7 +40,7 @@ public class BasicWebSocketServer : MonoBehaviour
 public class ChatBehavior : WebSocketBehavior
 {
 
-    private static List<Cliente> clientes = new List<Cliente>();
+    private static readonly List<Cliente> clientes = new();
 
     // Se invoca cuando se recibe un mensaje desde un cliente.
     protected override void OnMessage(MessageEventArgs e)
