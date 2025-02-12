@@ -48,9 +48,4 @@ public class ChatBehavior : WebSocketBehavior
         // Envía de vuelta el mismo mensaje recibido.
         Send(e.Data);
     }
-
-    protected override void OnOpen()
-    {
-        clientes.Add(new Cliente(clientes.Count, "#" + Random.ColorHSV().ToHexString()));
-    }
 }
