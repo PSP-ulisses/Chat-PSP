@@ -36,7 +36,7 @@ public class BasicWebSocketServer : MonoBehaviour
         }
     }
 
-    public static void clienteConectado(Cliente cliente)
+    public static void ClienteConectado(Cliente cliente)
     {
         Debug.Log("Cliente conectado: " + cliente.ToString() + ".");
     }
@@ -57,7 +57,7 @@ public class ChatBehavior : WebSocketBehavior
     protected override void OnOpen()
     {
         clientes.Add(new Cliente(clientes.Count, "#" + Random.ColorHSV().ToHexString()));
-        BasicWebSocketServer.clienteConectado(clientes[^1]);
+        BasicWebSocketServer.ClienteConectado(clientes[^1]);
     }
 }
 
