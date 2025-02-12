@@ -52,7 +52,7 @@ public class ChatBehavior : WebSocketBehavior
     protected override void OnOpen()
     {
         clientes.Add(new Cliente(clientes.Count, "#" + Random.ColorHSV().ToHexString()));
-        Debug.Log("Cliente conectado. ID: " + clientes[^1].id + ".");
+        Debug.Log("Cliente conectado: " + clientes[^1].ToString() + ".");
     }
 }
 
@@ -65,5 +65,10 @@ public class Cliente
     {
         this.id = id;
         this.color = color;
+    }
+
+    public override string ToString()
+    {
+        return "Cliente #" + id + " (" + color + ")";
     }
 }
