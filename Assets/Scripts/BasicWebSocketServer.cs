@@ -39,11 +39,20 @@ public class BasicWebSocketServer : MonoBehaviour
 
 public class ChatBehavior : WebSocketBehavior
 {
+    private int _numOfClients = 0;
 
     // Se invoca cuando se recibe un mensaje desde un cliente.
     protected override void OnMessage(MessageEventArgs e)
     {
         // Envía de vuelta el mismo mensaje recibido.
         Send(e.Data);
+    }
+
+    // Se invoca cuando se establece la conexión con un cliente.
+    protected override void OnOpen()
+    {
+        _numOfClients++;
+        Debug.Log("Cliente con id: " + _numOfClients + " conectado.");
+        Send("NewID:" + _numOfClients);
     }
 }

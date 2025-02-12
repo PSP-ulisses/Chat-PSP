@@ -7,6 +7,7 @@ public class BasicWebSocketClient : MonoBehaviour
 {
     // Instancia del cliente WebSocket
     private WebSocket ws;
+    private int id;
 
     public TMP_Text chatDisplay;  // Texto donde se muestra el historial del chat
     public TMP_InputField inputField; // Input donde el usuario escribe
@@ -28,7 +29,15 @@ public class BasicWebSocketClient : MonoBehaviour
         // Evento OnMessage: se invoca cuando se recibe un mensaje del servidor
         ws.OnMessage += (sender, e) =>
         {
-            Debug.Log("Mensaje recibido: " + e.Data);
+            if (e.Data.StartsWith("NewID:"))
+            {
+                id = int.Parse(e.Data.Substring(6));
+                Debug.Log("Soy el cliente con ID: " + id);
+            }
+            else
+            {
+                Debug.Log("Mensaje recibido: " + e.Data);
+            }
         };
 
         // Evento OnError: se invoca cuando ocurre un error en la conexión
