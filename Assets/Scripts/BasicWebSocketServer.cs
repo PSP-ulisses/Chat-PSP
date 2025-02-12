@@ -14,8 +14,9 @@ public class BasicWebSocketServer : MonoBehaviour
         // Crear un servidor WebSocket que escucha en el puerto 7777.
         wss = new WebSocketServer(7777);
 
-        // Añadir un servicio en la ruta "/" que utiliza el comportamiento EchoBehavior.
-        wss.AddWebSocketService<EchoBehavior>("/");
+    // Añadir un servicio en la ruta "/" que utiliza el comportamiento EchoBehavior.
+    // TODO: Cambiar comentario.
+        wss.AddWebSocketService<ChatBehavior>("/");
 
         // Iniciar el servidor.
         wss.Start();
@@ -36,8 +37,7 @@ public class BasicWebSocketServer : MonoBehaviour
     }
 }
 
-// Comportamiento básico del servicio WebSocket: simplemente devuelve el mensaje recibido.
-public class EchoBehavior : WebSocketBehavior
+public class ChatBehavior : WebSocketBehavior
 {
     // Se invoca cuando se recibe un mensaje desde un cliente.
     protected override void OnMessage(MessageEventArgs e)
