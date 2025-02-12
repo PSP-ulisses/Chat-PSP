@@ -55,20 +55,3 @@ public class ChatBehavior : WebSocketBehavior
         Debug.Log("Cliente conectado: " + clientes[^1]);
     }
 }
-
-public class Cliente
-{
-    public int id;
-    public string color;
-
-    public Cliente(int id, string color)
-    {
-        this.id = id;
-        this.color = color;
-    }
-
-    public override string ToString()
-    {
-        return "Cliente #" + id + " (" + color + ")";
-    }
-}
