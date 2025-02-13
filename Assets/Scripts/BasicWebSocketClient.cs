@@ -20,7 +20,6 @@ public class BasicWebSocketClient : MonoBehaviour
     public Button sendButton; // Botón para enviar mensajes
     public ScrollRect scrollRect; // Scroll View para manejar el desplazamiento
     public TMP_Text textID;
-    public TMP_Text conStatus;
     private readonly Queue<Action> _actionsToRun = new();
 
     private const int maxRetries = 5; // Número máximo de reintentos
@@ -53,7 +52,6 @@ public class BasicWebSocketClient : MonoBehaviour
             // Evento OnOpen: se invoca cuando se establece la conexión con el servidor
             ws.OnOpen += (sender, e) => EnqueueUIAction(() =>
             {
-                conStatus.enabled = false;
                 inputField.enabled = true;
                 ToastNotification.Hide();
                 ToastNotification.Show("Conectado al servidor", "success");
@@ -91,7 +89,6 @@ public class BasicWebSocketClient : MonoBehaviour
             ws.OnClose += (sender, e) => EnqueueUIAction(() =>
             {
                 inputField.enabled = false;
-                conStatus.enabled = true;
                 ToastNotification.Show("La conexión está cerrada", 0, "error");
             });
 
