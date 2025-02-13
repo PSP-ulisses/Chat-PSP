@@ -51,7 +51,6 @@ public class BasicWebSocketClient : MonoBehaviour
         ws.OnClose += (sender, e) =>
         {
             LogCliente("Soy el cliente con ID: " + id + ", y me voy a cerrar.");
-            SendMessageToServer("closing:" + id);
         };
 
         // Conectar de forma asíncrona al servidor WebSocket
