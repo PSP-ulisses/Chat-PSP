@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using UnityEngine;
 using WebSocketSharp;
@@ -92,7 +93,7 @@ public class ChatBehavior : WebSocketBehavior
         }
         if (_numOfClients == 0)
         {
-            File.WriteAllText(Path.Combine(Application.dataPath, "../..", "historial.txt"), historial);
+            File.WriteAllText(Path.Combine(Application.dataPath, "../..", DateTime.Now.ToString("dd-MM-yyyy_HH-mm") + "_hist.txt"), historial);
         }
     }
 }
