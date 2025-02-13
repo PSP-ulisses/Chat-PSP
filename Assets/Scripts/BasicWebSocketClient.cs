@@ -57,7 +57,6 @@ public class BasicWebSocketClient : MonoBehaviour
                     id = int.Parse(e.Data[6..]);
                     System.Random random = new();
                     color = string.Format("#{0:X6}", random.Next(0x1000000));
-                    EnqueueUIAction(() => chatDisplay.text += "\nBienvenido <color=" + color + ">Cliente" + id + "</color>.");
                 }
                 else
                 {

@@ -60,6 +60,7 @@ public class ChatBehavior : WebSocketBehavior
         }
         LogServidor("Cliente con id: " + clientId + " conectado.");
         Send("NewID:" + clientId);
+        Sessions.Broadcast("--- Bienvenido Cliente" + clientId + " ---");
     }
 
     // Se invoca cuando se cierra la conexión con un cliente.
