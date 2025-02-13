@@ -42,8 +42,10 @@ public class ChatBehavior : WebSocketBehavior
     // Se invoca cuando se recibe un mensaje desde un cliente.
     protected override void OnMessage(MessageEventArgs e)
     {
-        // Envía de vuelta el mismo mensaje recibido.
-        Send(e.Data);
+        string id = e.Data.Split(':')[0];
+        string message = e.Data.Split(':')[1];
+
+        Send("Cliente" + id + ": " + message);
     }
 
     // Se invoca cuando se establece la conexión con un cliente.
