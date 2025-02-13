@@ -37,7 +37,7 @@ public class BasicWebSocketServer : MonoBehaviour
 
 public class ChatBehavior : WebSocketBehavior
 {
-    private int _numOfClients = 0;
+    private static int _numOfClients = 0;
 
     // Se invoca cuando se recibe un mensaje desde un cliente.
     protected override void OnMessage(MessageEventArgs e)
