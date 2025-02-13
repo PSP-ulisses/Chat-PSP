@@ -11,15 +11,26 @@ public class BasicWebSocketServer : MonoBehaviour
     // Se ejecuta al iniciar la escena.
     void Start()
     {
-        // Crear un servidor WebSocket que escucha en el puerto 7777.
-        wss ??= new WebSocketServer(7777);
+        // Verificar si ya hay un servidor WebSocket en ejecución.
+        if (wss == null)
+        {
+            lock (this)
+            {
+                // Crear un servidor WebSocket que escucha en el puerto 7777.
+                wss = new WebSocketServer(7777);
 
-        wss.AddWebSocketService<ChatBehavior>("/");
+                wss.AddWebSocketService<ChatBehavior>("/");
 
-        // Iniciar el servidor.
-        wss.Start();
+                // Iniciar el servidor.
+                wss.Start();
 
-        ChatBehavior.LogServidor("Servidor WebSocket iniciado en ws://127.0.0.1:7777/");
+                ChatBehavior.LogServidor("Servidor WebSocket iniciado en ws://127.0.0.1:7777/");
+            }
+        }
+        else
+        {
+            ChatBehavior.LogServidor("El servidor WebSocket ya está en ejecución.");
+        }
     }
 
     // Se ejecuta cuando el objeto se destruye (por ejemplo, al cerrar la aplicación o cambiar de escena).
