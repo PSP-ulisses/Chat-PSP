@@ -71,11 +71,11 @@ public class BasicWebSocketClient : MonoBehaviour
                     inputField.text = "";
                     inputField.ActivateInputField();
 
-                    // Forzar actualización del Layout para el Scroll
-                    LayoutRebuilder.ForceRebuildLayoutImmediate(chatDisplay.rectTransform);
-
                     // Hacer que el Scroll se desplace hasta el final
                     ScrollToBottom();
+
+                    // Forzar actualización del Layout para el Scroll
+                    LayoutRebuilder.ForceRebuildLayoutImmediate(chatDisplay.rectTransform);
                 }
             };
 
