@@ -145,11 +145,6 @@ public class BasicWebSocketClient : MonoBehaviour
         }
     }
 
-    void ScrollToBottom()
-    {
-
-    }
-
     private void EnqueueUIAction(Action action)
     {
         lock (_actionsToRun)
