@@ -17,6 +17,7 @@ public class BasicWebSocketClient : MonoBehaviour
     public TMP_InputField inputField; // Input donde el usuario escribe
     public Button sendButton; // Botón para enviar mensajes
     public ScrollRect scrollRect; // Scroll View para manejar el desplazamiento
+    public TMP_Text textID;
     private readonly Queue<Action> _actionsToRun = new();
 
     private const int maxRetries = 5; // Número máximo de reintentos
@@ -57,6 +58,7 @@ public class BasicWebSocketClient : MonoBehaviour
                     id = int.Parse(e.Data[6..]);
                     System.Random random = new();
                     color = string.Format("#{0:X6}", random.Next(0x1000000));
+                    EnqueueUIAction(() => textID.text = "Cliente" + id);
                 }
                 else
                 {
@@ -107,7 +109,7 @@ public class BasicWebSocketClient : MonoBehaviour
 
         if (ws != null && ws.ReadyState == WebSocketState.Open)
         {
-            if (!message.StartsWith("NewID:"))
+            if (!message.StartsWith("NewID:") && !message.StartsWith("desc:"))
             {
                 ws.Send(id + ":" + color + ": " + message);
             }
@@ -127,6 +129,7 @@ public class BasicWebSocketClient : MonoBehaviour
     {
         if (ws != null)
         {
+            ws.Send("desc:" + id);
             ws.Close();
             ws = null;
         }

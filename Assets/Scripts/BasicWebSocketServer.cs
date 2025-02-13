@@ -43,11 +43,14 @@ public class ChatBehavior : WebSocketBehavior
     // Se invoca cuando se recibe un mensaje desde un cliente.
     protected override void OnMessage(MessageEventArgs e)
     {
-        string id = e.Data.Split(':')[0];
-        string color = e.Data.Split(':')[1];
-        string message = e.Data.Split(':')[2];
-
-        Sessions.Broadcast("<color=" + color + ">Cliente" + id + ":</color> " + message);
+        if (e.Data.StartsWith("desc:"))
+        {
+            Sessions.Broadcast("--- Hasta la vista Cliente" + e.Data.Split(':')[1] + " ---");
+        }
+        else
+        {
+            Sessions.Broadcast("<color=" + e.Data.Split(':')[1] + ">Cliente" + e.Data.Split(':')[0] + ":</color> " + e.Data.Split(':')[2]);
+        }
     }
 
     protected override void OnOpen()
