@@ -19,7 +19,7 @@ public class BasicWebSocketServer : MonoBehaviour
         // Iniciar el servidor.
         wss.Start();
 
-        Debug.Log("Servidor WebSocket iniciado en ws://127.0.0.1:7777/");
+        ChatBehavior.LogServidor("Servidor WebSocket iniciado en ws://127.0.0.1:7777/");
     }
 
     // Se ejecuta cuando el objeto se destruye (por ejemplo, al cerrar la aplicación o cambiar de escena).
@@ -30,7 +30,7 @@ public class BasicWebSocketServer : MonoBehaviour
         {
             wss.Stop();
             wss = null;
-            Debug.Log("Servidor WebSocket detenido.");
+            ChatBehavior.LogServidor("Servidor WebSocket detenido.");
         }
     }
 }
@@ -60,8 +60,8 @@ public class ChatBehavior : WebSocketBehavior
         LogServidor("Se ha desconectado un cliente.");
     }
 
-    private void LogServidor(string data)
+    public static void LogServidor(string data)
     {
-        Debug.Log("<color=yellow>SERVb:</color> " + data);
+        Debug.Log("<color=yellow>SERV:</color> " + data);
     }
 }

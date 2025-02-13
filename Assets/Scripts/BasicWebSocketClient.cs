@@ -23,7 +23,7 @@ public class BasicWebSocketClient : MonoBehaviour
         // Evento OnOpen: se invoca cuando se establece la conexión con el servidor
         ws.OnOpen += (sender, e) =>
         {
-            Debug.Log("WebSocket conectado correctamente.");
+            LogCliente("WebSocket conectado correctamente.");
         };
 
         // Evento OnMessage: se invoca cuando se recibe un mensaje del servidor
@@ -32,25 +32,25 @@ public class BasicWebSocketClient : MonoBehaviour
             if (e.Data.StartsWith("NewID:"))
             {
                 id = int.Parse(e.Data[6..]);
-                Debug.Log("Soy el cliente con ID: " + id);
+                LogCliente("Soy el cliente con ID: " + id);
                 ws.Close();
             }
             else
             {
-                Debug.Log("Mensaje recibido: " + e.Data);
+                LogCliente("Mensaje recibido: " + e.Data);
             }
         };
 
         // Evento OnError: se invoca cuando ocurre un error en la conexión
         ws.OnError += (sender, e) =>
         {
-            Debug.LogError("Error en el WebSocket: " + e.Message);
+            LogCliente("Error en el WebSocket: " + e.Message);
         };
 
         // Evento OnClose: se invoca cuando se cierra la conexión con el servidor
         ws.OnClose += (sender, e) =>
         {
-            Debug.Log("Soy el cliente con ID: " + id + ", y me voy a cerrar.");
+            LogCliente("Soy el cliente con ID: " + id + ", y me voy a cerrar.");
             SendMessageToServer("closing:" + id);
         };
 
@@ -70,12 +70,12 @@ public class BasicWebSocketClient : MonoBehaviour
             else
             {
                 // TODO: Hacerlo más serio.
-                Debug.LogError("Vas de listo pero he capturado tu trampa.");
+                LogCliente("Vas de listo pero he capturado tu trampa.");
             }
         }
         else
         {
-            Debug.LogError("No se puede enviar el mensaje. La conexión no está abierta.");
+            LogCliente("No se puede enviar el mensaje. La conexión no está abierta.");
         }
     }
 
@@ -87,5 +87,10 @@ public class BasicWebSocketClient : MonoBehaviour
             ws.Close();
             ws = null;
         }
+    }
+
+    public static void LogCliente(string data)
+    {
+        Debug.Log("<color=blue>CLI:</color> " + data);
     }
 }
