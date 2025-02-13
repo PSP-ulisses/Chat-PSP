@@ -37,7 +37,7 @@ public class BasicWebSocketClient : MonoBehaviour
             else
             {
                 LogCliente("Mensaje recibido: " + e.Data);
-                chatDisplay.text += e.Data + "\n";
+                chatDisplay.text += "\n" + e.Data;
 
                 // Limpiar input y mantener el foco
                 inputField.text = "";
