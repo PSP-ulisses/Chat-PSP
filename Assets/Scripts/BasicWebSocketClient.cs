@@ -119,13 +119,13 @@ public class BasicWebSocketClient : MonoBehaviour
 
         if (ws != null && ws.ReadyState == WebSocketState.Open)
         {
-            if (!message.StartsWith("NewID:") && !message.StartsWith("desc:"))
+            if (!message.StartsWith("NewID:") && !message.StartsWith("desc:") && message != "palabra:prohibida")
             {
                 ws.Send(id + ":" + color + ": " + message);
             }
             else
             {
-                return;
+                ws.Send("palabra:prohibida");
             }
         }
         else

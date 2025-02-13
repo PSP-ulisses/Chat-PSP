@@ -58,6 +58,10 @@ public class ChatBehavior : WebSocketBehavior
         {
             Sessions.Broadcast("--- Hasta la vista Cliente" + e.Data.Split(':')[1] + " ---");
         }
+        else if (e.Data == "palabra:prohibida")
+        {
+            Send("<color=red>¡No puedes escribir eso!</color>");
+        }
         else
         {
             Sessions.Broadcast("<color=" + e.Data.Split(':')[1] + ">Cliente" + e.Data.Split(':')[0] + ":</color> " + e.Data.Split(':')[2]);
