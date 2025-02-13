@@ -55,6 +55,8 @@ public class BasicWebSocketClient : MonoBehaviour
             {
                 conStatus.enabled = false;
                 inputField.enabled = true;
+                ToastNotification.Hide();
+                ToastNotification.Show("Conectado al servidor", "success");
             });
 
             // Evento OnMessage: se invoca cuando se recibe un mensaje del servidor
@@ -90,6 +92,7 @@ public class BasicWebSocketClient : MonoBehaviour
             {
                 inputField.enabled = false;
                 conStatus.enabled = true;
+                ToastNotification.Show("La conexión está cerrada", 0, "error");
             });
 
             // Conectar de forma asíncrona al servidor WebSocket
