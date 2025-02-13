@@ -13,6 +13,8 @@ public class BasicWebSocketClient : MonoBehaviour
     private int id;
     private string color;
 
+    private readonly List<string> colores = new() { "#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF", "#00FFFF" };
+
     public TMP_Text chatDisplay;  // Texto donde se muestra el historial del chat
     public TMP_InputField inputField; // Input donde el usuario escribe
     public Button sendButton; // Botón para enviar mensajes
@@ -57,7 +59,7 @@ public class BasicWebSocketClient : MonoBehaviour
                 {
                     id = int.Parse(e.Data[6..]);
                     System.Random random = new();
-                    color = string.Format("#{0:X6}", random.Next(0x1000000));
+                    color = colores[random.Next(0, colores.Count)];
                     EnqueueUIAction(() => textID.text = "Cliente" + id);
                 }
                 else
