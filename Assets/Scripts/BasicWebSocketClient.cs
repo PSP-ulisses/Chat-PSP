@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,6 +15,7 @@ public class BasicWebSocketClient : MonoBehaviour
     public TMP_InputField inputField; // Input donde el usuario escribe
     public Button sendButton; // Botón para enviar mensajes
     public ScrollRect scrollRect; // Scroll View para manejar el desplazamiento
+    private Queue<Action> _actionsToRun = new Queue<Action>();
 
     // Se ejecuta al iniciar la escena
     void Start()
@@ -37,7 +40,7 @@ public class BasicWebSocketClient : MonoBehaviour
             else
             {
                 LogCliente("Mensaje recibido: " + e.Data);
-                chatDisplay.text += "\n" + e.Data;
+                EnqueueUIAction(() => chatDisplay.text += "\n" + e.Data);
 
                 // Limpiar input y mantener el foco
                 inputField.text = "";
@@ -124,5 +127,28 @@ public class BasicWebSocketClient : MonoBehaviour
     {
         Canvas.ForceUpdateCanvases();
         scrollRect.verticalNormalizedPosition = 0f;
+    }
+
+    private void EnqueueUIAction(Action action)
+    {
+        lock (_actionsToRun)
+        {
+            _actionsToRun.Enqueue(action);
+        }
+    }
+
+    void Update()
+    {
+        if (_actionsToRun.Count > 0)
+        {
+            Action action;
+
+            lock (_actionsToRun)
+            {
+                action = _actionsToRun.Dequeue();
+            }
+
+            action?.Invoke();
+        }
     }
 }
