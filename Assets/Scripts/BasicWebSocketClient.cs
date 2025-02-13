@@ -65,14 +65,14 @@ public class BasicWebSocketClient : MonoBehaviour
                 }
                 else
                 {
-                    EnqueueUIAction(() => chatDisplay.text += "\n" + e.Data);
-
-                    // Limpiar input y mantener el foco
+                    EnqueueUIAction(() =>
+                {
+                    chatDisplay.text += "\n" + e.Data;
+                    Canvas.ForceUpdateCanvases();
+                    scrollRect.verticalNormalizedPosition = 0f;
                     inputField.text = "";
                     inputField.ActivateInputField();
-
-                    // Hacer que el Scroll se desplace hasta el final
-                    ScrollToBottom();
+                });
 
                     // Forzar actualización del Layout para el Scroll
                     LayoutRebuilder.ForceRebuildLayoutImmediate(chatDisplay.rectTransform);
@@ -80,7 +80,7 @@ public class BasicWebSocketClient : MonoBehaviour
             };
 
             // Evento OnError: se invoca cuando ocurre un error en la conexión
-            ws.OnError += (sender, e) => EnqueueUIAction(() => chatDisplay.text += "\n<color=red>--- Error: " + e.Message + " ---</color>");
+            ws.OnError += (sender, e) => EnqueueUIAction(() => Debug.LogError("Error: " + e.Message));
 
             // Evento OnClose: se invoca cuando se cierra la conexión con el servidor
             ws.OnClose += (sender, e) => EnqueueUIAction(() => conStatus.enabled = true);
@@ -140,8 +140,7 @@ public class BasicWebSocketClient : MonoBehaviour
 
     void ScrollToBottom()
     {
-        Canvas.ForceUpdateCanvases();
-        scrollRect.verticalNormalizedPosition = 0f;
+
     }
 
     private void EnqueueUIAction(Action action)
