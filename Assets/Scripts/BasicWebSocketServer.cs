@@ -57,7 +57,7 @@ public class ChatBehavior : WebSocketBehavior
     {
         if (e.Data.StartsWith("desc:"))
         {
-            Sessions.Broadcast("bye:" + e.Data.Split(':')[1]);
+            Sessions.Broadcast("bye:" + e.Data.Split(':')[0]);
         }
         else
         {
