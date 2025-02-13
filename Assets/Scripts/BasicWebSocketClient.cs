@@ -130,6 +130,7 @@ public class BasicWebSocketClient : MonoBehaviour
         }
         else
         {
+            ToastNotification.Show("El cliente no está conectado.", 5f, "error");
             Debug.LogError("El cliente no está conectado.");
         }
     }
