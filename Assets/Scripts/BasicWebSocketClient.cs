@@ -67,33 +67,14 @@ public class BasicWebSocketClient : MonoBehaviour
                     color = colores[random.Next(0, colores.Count)];
                     EnqueueUIAction(() => textID.text = "Cliente" + id);
                 }
-                else if (e.Data.StartsWith("bye:"))
+                else if (e.Data.StartsWith("desc:"))
                 {
                     EnqueueUIAction(() =>
                         {
                             ToastNotification.Show("Cliente" + e.Data.Split(':')[1] + " se ha desconectado", "info");
-                            chatDisplay.text += "\n--- Hasta la vista Cliente" + e.Data.Split(':')[1] + " ---";
-                            Canvas.ForceUpdateCanvases();
-                            scrollRect.verticalNormalizedPosition = 0f;
-                            inputField.text = "";
-                            inputField.ActivateInputField();
-                            // Forzar actualización del Layout para el Scroll
-                            LayoutRebuilder.ForceRebuildLayoutImmediate(chatDisplay.rectTransform);
                         });
                 }
-                else
-                {
-                    EnqueueUIAction(() =>
-                    {
-                        chatDisplay.text += "\n" + e.Data;
-                        Canvas.ForceUpdateCanvases();
-                        scrollRect.verticalNormalizedPosition = 0f;
-                        inputField.text = "";
-                        inputField.ActivateInputField();
-                        // Forzar actualización del Layout para el Scroll
-                        LayoutRebuilder.ForceRebuildLayoutImmediate(chatDisplay.rectTransform);
-                    });
-                }
+                else { PintarMensaje(e.Data); }
             };
 
             // Evento OnError: se invoca cuando ocurre un error en la conexión
@@ -133,7 +114,7 @@ public class BasicWebSocketClient : MonoBehaviour
 
         if (ws != null && ws.ReadyState == WebSocketState.Open)
         {
-            if (!message.StartsWith("NewID:") && !message.StartsWith("desc:") && !message.StartsWith("bye:"))
+            if (!message.StartsWith("NewID:") && !message.StartsWith("desc:"))
             {
                 ws.Send(id + ":" + color + ": " + message);
             }
@@ -181,5 +162,19 @@ public class BasicWebSocketClient : MonoBehaviour
 
             action?.Invoke();
         }
+    }
+
+    void PintarMensaje(string mensaje)
+    {
+        EnqueueUIAction(() =>
+            {
+                        chatDisplay.text += "\n" + mensaje;
+                        Canvas.ForceUpdateCanvases();
+                        scrollRect.verticalNormalizedPosition = 0f;
+                        inputField.text = "";
+                        inputField.ActivateInputField();
+                        // Forzar actualización del Layout para el Scroll
+                        LayoutRebuilder.ForceRebuildLayoutImmediate(chatDisplay.rectTransform);
+                    });
     }
 }
