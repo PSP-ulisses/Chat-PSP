@@ -65,6 +65,16 @@ public class BasicWebSocketClient : MonoBehaviour
 
         // Conectar de forma asíncrona al servidor WebSocket
         ws.ConnectAsync();
+
+        sendButton.onClick.AddListener(SendMessageToServer);
+        inputField.onSubmit.AddListener(delegate { SendMessageToServer(); });
+
+        // Dar foco automático al input al iniciar
+        inputField.Select();
+        inputField.ActivateInputField();
+
+        //Limpiar el chatDisplay
+        chatDisplay.text = "";
     }
 
     // Método para enviar un mensaje al servidor (puedes llamarlo, por ejemplo, desde un botón en la UI)
@@ -93,16 +103,6 @@ public class BasicWebSocketClient : MonoBehaviour
         {
             LogCliente("No se puede enviar el mensaje. La conexión no está abierta.");
         }
-
-        sendButton.onClick.AddListener(SendMessageToServer);
-        inputField.onSubmit.AddListener(delegate { SendMessageToServer(); });
-
-        // Dar foco automático al input al iniciar
-        inputField.Select();
-        inputField.ActivateInputField();
-
-        //Limpiar el chatDisplay
-        chatDisplay.text = "";
     }
 
     // Se ejecuta cuando el objeto se destruye (por ejemplo, al cambiar de escena o cerrar la aplicación)
