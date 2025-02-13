@@ -65,7 +65,7 @@ public class ChatBehavior : WebSocketBehavior
         else
         {
             Sessions.Broadcast("<color=" + e.Data.Split(':')[1] + ">Cliente" + e.Data.Split(':')[0] + ":</color> " + e.Data.Split(':')[2]);
-            historial += "Cliente" + e.Data.Split(':')[0] + ":" + e.Data.Split(':')[2] + "\n";
+            historial += "[" + DateTime.Now.ToString("dd-MM-yyyy HH:mm") + "] Cliente" + e.Data.Split(':')[0] + ":" + e.Data.Split(':')[2] + "\n";
         }
     }
 
