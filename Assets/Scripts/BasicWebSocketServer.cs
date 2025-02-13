@@ -12,7 +12,7 @@ public class BasicWebSocketServer : MonoBehaviour
     void Start()
     {
         // Crear un servidor WebSocket que escucha en el puerto 7777.
-        wss = new WebSocketServer(7777);
+        wss ??= new WebSocketServer(7777);
 
         wss.AddWebSocketService<ChatBehavior>("/");
 
