@@ -51,7 +51,7 @@ public class BasicWebSocketClient : MonoBehaviour
             ws = new WebSocket("ws://127.0.0.1:7777/");
 
             // Evento OnOpen: se invoca cuando se establece la conexión con el servidor
-            ws.OnOpen += (sender, e) => { };
+            ws.OnOpen += (sender, e) => EnqueueUIAction(() => conStatus.enabled = false);
 
             // Evento OnMessage: se invoca cuando se recibe un mensaje del servidor
             ws.OnMessage += (sender, e) =>
@@ -83,7 +83,7 @@ public class BasicWebSocketClient : MonoBehaviour
             ws.OnError += (sender, e) => EnqueueUIAction(() => chatDisplay.text += "\n<color=red>--- Error: " + e.Message + " ---</color>");
 
             // Evento OnClose: se invoca cuando se cierra la conexión con el servidor
-            ws.OnClose += (sender, e) => EnqueueUIAction(() => chatDisplay.text += "\n<color=red>--- Conexión cerrada ---</color>");
+            ws.OnClose += (sender, e) => EnqueueUIAction(() => conStatus.enabled = true);
 
             // Conectar de forma asíncrona al servidor WebSocket
             ws.ConnectAsync();
