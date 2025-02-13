@@ -47,10 +47,7 @@ public class BasicWebSocketClient : MonoBehaviour
             ws = new WebSocket("ws://127.0.0.1:7777/");
 
             // Evento OnOpen: se invoca cuando se establece la conexión con el servidor
-            ws.OnOpen += (sender, e) =>
-            {
-                LogCliente("WebSocket conectado correctamente.");
-            };
+            ws.OnOpen += (sender, e) => { };
 
             // Evento OnMessage: se invoca cuando se recibe un mensaje del servidor
             ws.OnMessage += (sender, e) =>
@@ -60,12 +57,10 @@ public class BasicWebSocketClient : MonoBehaviour
                     id = int.Parse(e.Data[6..]);
                     System.Random random = new();
                     color = string.Format("#{0:X6}", random.Next(0x1000000));
-                    LogCliente("Soy el cliente con ID: " + id);
                     EnqueueUIAction(() => chatDisplay.text += "\nBienvenido <color=" + color + ">Cliente" + id + "</color>.");
                 }
                 else
                 {
-                    LogCliente("Mensaje recibido: " + e.Data);
                     EnqueueUIAction(() => chatDisplay.text += "\n" + e.Data);
 
                     // Limpiar input y mantener el foco
@@ -81,16 +76,10 @@ public class BasicWebSocketClient : MonoBehaviour
             };
 
             // Evento OnError: se invoca cuando ocurre un error en la conexión
-            ws.OnError += (sender, e) =>
-            {
-                LogCliente("Error en el WebSocket: " + e.Message);
-            };
+            ws.OnError += (sender, e) => { };
 
             // Evento OnClose: se invoca cuando se cierra la conexión con el servidor
-            ws.OnClose += (sender, e) =>
-            {
-                LogCliente("Soy el cliente con ID: " + id + ", y me voy a cerrar.");
-            };
+            ws.OnClose += (sender, e) => { };
 
             // Conectar de forma asíncrona al servidor WebSocket
             ws.ConnectAsync();
@@ -100,15 +89,11 @@ public class BasicWebSocketClient : MonoBehaviour
 
             if (ws.ReadyState == WebSocketState.Open)
             {
-                LogCliente("Conexión establecida después de " + (attempt + 1) + " intentos.");
                 yield break;
             }
 
             attempt++;
-            LogCliente("Reintentando conexión... Intento " + attempt);
         }
-
-        LogCliente("No se pudo establecer la conexión después de " + maxRetries + " intentos.");
     }
 
     // Método para enviar un mensaje al servidor (puedes llamarlo, por ejemplo, desde un botón en la UI)
@@ -118,7 +103,6 @@ public class BasicWebSocketClient : MonoBehaviour
 
         if (string.IsNullOrEmpty(message))
         {
-            LogCliente("No se puede enviar el mensaje. El mensaje está vacío.");
             return;
         }
 
@@ -130,12 +114,12 @@ public class BasicWebSocketClient : MonoBehaviour
             }
             else
             {
-                LogCliente("No se puede enviar el mensaje. El mensaje no puede comenzar con 'NewID:'.");
+                return;
             }
         }
         else
         {
-            LogCliente("No se puede enviar el mensaje. La conexión no está abierta.");
+            return;
         }
     }
 
