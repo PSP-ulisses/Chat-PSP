@@ -33,7 +33,6 @@ public class BasicWebSocketClient : MonoBehaviour
             {
                 id = int.Parse(e.Data[6..]);
                 LogCliente("Soy el cliente con ID: " + id);
-                ws.Close();
             }
             else
             {
