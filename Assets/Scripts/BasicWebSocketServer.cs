@@ -46,7 +46,7 @@ public class ChatBehavior : WebSocketBehavior
         string color = e.Data.Split(':')[1];
         string message = e.Data.Split(':')[2];
 
-        Send("<color=" + color + ">Cliente" + id + ":</color> " + message);
+        Sessions.Broadcast("<color=" + color + ">Cliente" + id + ":</color> " + message);
     }
 
     // Se invoca cuando se establece la conexión con un cliente.
