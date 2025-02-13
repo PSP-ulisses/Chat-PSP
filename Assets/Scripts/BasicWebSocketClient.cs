@@ -83,7 +83,7 @@ public class BasicWebSocketClient : MonoBehaviour
             };
 
             // Evento OnError: se invoca cuando ocurre un error en la conexión
-            ws.OnError += (sender, e) => EnqueueUIAction(() => Debug.LogError("Error: " + e.Message));
+            ws.OnError += (sender, e) => Debug.LogError("Error: " + e.Message);
 
             // Evento OnClose: se invoca cuando se cierra la conexión con el servidor
             ws.OnClose += (sender, e) => EnqueueUIAction(() =>
@@ -130,7 +130,7 @@ public class BasicWebSocketClient : MonoBehaviour
         }
         else
         {
-            return;
+            Debug.LogError("El cliente no está conectado.");
         }
     }
 
