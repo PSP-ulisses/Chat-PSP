@@ -37,6 +37,17 @@ public class BasicWebSocketClient : MonoBehaviour
             else
             {
                 LogCliente("Mensaje recibido: " + e.Data);
+                chatDisplay.text += e.Data + "\n";
+
+                // Limpiar input y mantener el foco
+                inputField.text = "";
+                inputField.ActivateInputField();
+
+                // Forzar actualización del Layout para el Scroll
+                LayoutRebuilder.ForceRebuildLayoutImmediate(chatDisplay.rectTransform);
+
+                // Hacer que el Scroll se desplace hasta el final
+                ScrollToBottom();
             }
         };
 
@@ -57,8 +68,16 @@ public class BasicWebSocketClient : MonoBehaviour
     }
 
     // Método para enviar un mensaje al servidor (puedes llamarlo, por ejemplo, desde un botón en la UI)
-    public void SendMessageToServer(string message)
+    public void SendMessageToServer()
     {
+        string message = inputField.text;
+
+        if (string.IsNullOrEmpty(message))
+        {
+            LogCliente("No se puede enviar el mensaje. El mensaje está vacío.");
+            return;
+        }
+
         if (ws != null && ws.ReadyState == WebSocketState.Open)
         {
             if (!message.StartsWith("NewID:"))
@@ -74,6 +93,16 @@ public class BasicWebSocketClient : MonoBehaviour
         {
             LogCliente("No se puede enviar el mensaje. La conexión no está abierta.");
         }
+
+        sendButton.onClick.AddListener(SendMessageToServer);
+        inputField.onSubmit.AddListener(delegate { SendMessageToServer(); });
+
+        // Dar foco automático al input al iniciar
+        inputField.Select();
+        inputField.ActivateInputField();
+
+        //Limpiar el chatDisplay
+        chatDisplay.text = "";
     }
 
     // Se ejecuta cuando el objeto se destruye (por ejemplo, al cambiar de escena o cerrar la aplicación)
@@ -89,5 +118,11 @@ public class BasicWebSocketClient : MonoBehaviour
     public static void LogCliente(string data)
     {
         Debug.Log("<color=blue>CLI:</color> " + data);
+    }
+
+    void ScrollToBottom()
+    {
+        Canvas.ForceUpdateCanvases();
+        scrollRect.verticalNormalizedPosition = 0f;
     }
 }
