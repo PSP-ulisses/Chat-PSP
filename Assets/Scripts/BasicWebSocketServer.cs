@@ -1,3 +1,4 @@
+using System.IO;
 using UnityEngine;
 using WebSocketSharp;
 using WebSocketSharp.Server;
@@ -48,8 +49,10 @@ public class BasicWebSocketServer : MonoBehaviour
 
 public class ChatBehavior : WebSocketBehavior
 {
+    private static int _numOfIDs = 0;
     private static int _numOfClients = 0;
     private static readonly object _lock = new();
+    private static string historial = "";
 
     // Se invoca cuando se recibe un mensaje desde un cliente.
     protected override void OnMessage(MessageEventArgs e)
@@ -61,6 +64,7 @@ public class ChatBehavior : WebSocketBehavior
         else
         {
             Sessions.Broadcast("<color=" + e.Data.Split(':')[1] + ">Cliente" + e.Data.Split(':')[0] + ":</color> " + e.Data.Split(':')[2]);
+            historial += "Cliente" + e.Data.Split(':')[0] + ":" + e.Data.Split(':')[2] + "\n";
         }
     }
 
@@ -69,8 +73,9 @@ public class ChatBehavior : WebSocketBehavior
         int clientId;
         lock (_lock)
         {
+            _numOfIDs++;
+            clientId = _numOfIDs;
             _numOfClients++;
-            clientId = _numOfClients;
         }
         Debug.Log("Cliente con id: " + clientId + " conectado.");
         Send("NewID:" + clientId);
@@ -81,5 +86,13 @@ public class ChatBehavior : WebSocketBehavior
     protected override void OnClose(CloseEventArgs e)
     {
         Debug.Log("Se ha desconectado un cliente.");
+        lock (_lock)
+        {
+            _numOfClients--;
+        }
+        if (_numOfClients == 0)
+        {
+            File.WriteAllText(Path.Combine(Application.dataPath, "../..", "historial.txt"), historial);
+        }
     }
 }
