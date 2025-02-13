@@ -149,11 +149,6 @@ public class BasicWebSocketClient : MonoBehaviour
         }
     }
 
-    public static void LogCliente(string data)
-    {
-        Debug.Log("<color=blue>CLI:</color> " + data);
-    }
-
     void ScrollToBottom()
     {
         Canvas.ForceUpdateCanvases();
