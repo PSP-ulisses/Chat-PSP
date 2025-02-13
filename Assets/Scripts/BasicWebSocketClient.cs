@@ -79,10 +79,10 @@ public class BasicWebSocketClient : MonoBehaviour
             };
 
             // Evento OnError: se invoca cuando ocurre un error en la conexión
-            ws.OnError += (sender, e) => { };
+            ws.OnError += (sender, e) => EnqueueUIAction(() => chatDisplay.text += "\n<color=red>--- Error: " + e.Message + " ---</color>");
 
             // Evento OnClose: se invoca cuando se cierra la conexión con el servidor
-            ws.OnClose += (sender, e) => { };
+            ws.OnClose += (sender, e) => EnqueueUIAction(() => chatDisplay.text += "\n<color=red>--- Conexión cerrada ---</color>");
 
             // Conectar de forma asíncrona al servidor WebSocket
             ws.ConnectAsync();
