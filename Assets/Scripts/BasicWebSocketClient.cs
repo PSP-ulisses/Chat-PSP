@@ -72,10 +72,9 @@ public class BasicWebSocketClient : MonoBehaviour
                     scrollRect.verticalNormalizedPosition = 0f;
                     inputField.text = "";
                     inputField.ActivateInputField();
-                });
-
                     // Forzar actualización del Layout para el Scroll
                     LayoutRebuilder.ForceRebuildLayoutImmediate(chatDisplay.rectTransform);
+                });
                 }
             };
 
