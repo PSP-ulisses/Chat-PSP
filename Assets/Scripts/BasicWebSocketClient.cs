@@ -69,8 +69,7 @@ public class BasicWebSocketClient : MonoBehaviour
             }
             else
             {
-                // TODO: Hacerlo más serio.
-                LogCliente("Vas de listo pero he capturado tu trampa.");
+                LogCliente("No se puede enviar el mensaje. El mensaje no puede comenzar con 'NewID:'.");
             }
         }
         else
