@@ -10,12 +10,13 @@ public class BasicWebSocketClient : MonoBehaviour
     // Instancia del cliente WebSocket
     private WebSocket ws;
     private int id;
+    private string color;
 
     public TMP_Text chatDisplay;  // Texto donde se muestra el historial del chat
     public TMP_InputField inputField; // Input donde el usuario escribe
     public Button sendButton; // Botón para enviar mensajes
     public ScrollRect scrollRect; // Scroll View para manejar el desplazamiento
-    private Queue<Action> _actionsToRun = new Queue<Action>();
+    private readonly Queue<Action> _actionsToRun = new();
 
     // Se ejecuta al iniciar la escena
     void Start()
@@ -35,8 +36,10 @@ public class BasicWebSocketClient : MonoBehaviour
             if (e.Data.StartsWith("NewID:"))
             {
                 id = int.Parse(e.Data[6..]);
+                System.Random random = new();
+                color = string.Format("#{0:X6}", random.Next(0x1000000));
                 LogCliente("Soy el cliente con ID: " + id);
-                EnqueueUIAction(() => chatDisplay.text += "\n Cliente" + id + " se ha conectado.");
+                EnqueueUIAction(() => chatDisplay.text += "\nBienvenido <color=" + color + ">Cliente" + id + "</color>.");
             }
             else
             {
@@ -96,7 +99,7 @@ public class BasicWebSocketClient : MonoBehaviour
         {
             if (!message.StartsWith("NewID:"))
             {
-                ws.Send(id + ": " + message);
+                ws.Send(id + ":" + color + ": " + message);
             }
             else
             {

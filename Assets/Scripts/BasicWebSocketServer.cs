@@ -43,9 +43,10 @@ public class ChatBehavior : WebSocketBehavior
     protected override void OnMessage(MessageEventArgs e)
     {
         string id = e.Data.Split(':')[0];
-        string message = e.Data.Split(':')[1];
+        string color = e.Data.Split(':')[1];
+        string message = e.Data.Split(':')[2];
 
-        Send("Cliente" + id + ": " + message);
+        Send("<color=" + color + ">Cliente" + id + ":</color> " + message);
     }
 
     // Se invoca cuando se establece la conexión con un cliente.
