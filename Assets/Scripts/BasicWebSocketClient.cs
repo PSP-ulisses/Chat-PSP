@@ -20,6 +20,7 @@ public class BasicWebSocketClient : MonoBehaviour
     public Button sendButton; // Botón para enviar mensajes
     public ScrollRect scrollRect; // Scroll View para manejar el desplazamiento
     public TMP_Text textID;
+    public TMP_Text conStatus;
     private readonly Queue<Action> _actionsToRun = new();
 
     private const int maxRetries = 5; // Número máximo de reintentos
