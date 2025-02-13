@@ -38,6 +38,7 @@ public class BasicWebSocketServer : MonoBehaviour
 public class ChatBehavior : WebSocketBehavior
 {
     private static int _numOfClients = 0;
+    private static readonly object _lock = new();
 
     // Se invoca cuando se recibe un mensaje desde un cliente.
     protected override void OnMessage(MessageEventArgs e)
@@ -49,12 +50,16 @@ public class ChatBehavior : WebSocketBehavior
         Sessions.Broadcast("<color=" + color + ">Cliente" + id + ":</color> " + message);
     }
 
-    // Se invoca cuando se establece la conexión con un cliente.
     protected override void OnOpen()
     {
-        _numOfClients++;
-        LogServidor("Cliente con id: " + _numOfClients + " conectado.");
-        Send("NewID:" + _numOfClients);
+        int clientId;
+        lock (_lock)
+        {
+            _numOfClients++;
+            clientId = _numOfClients;
+        }
+        LogServidor("Cliente con id: " + clientId + " conectado.");
+        Send("NewID:" + clientId);
     }
 
     // Se invoca cuando se cierra la conexión con un cliente.
