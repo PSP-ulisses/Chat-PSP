@@ -7,7 +7,7 @@ using WebSocketSharp.Server;
 /// <summary>
 /// Clase que se adjunta a un GameObject en Unity para iniciar el servidor WebSocket.
 /// </summary>
-public class BasicWebSocketServer : MonoBehaviour
+public class ChatWebSocketServer : MonoBehaviour
 {
     private WebSocketServer wss; // Servidor WebSocket.
 

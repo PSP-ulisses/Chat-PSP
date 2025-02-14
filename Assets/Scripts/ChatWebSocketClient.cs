@@ -9,7 +9,7 @@ using WebSocketSharp;
 /// <summary>
 /// Clase que se adjunta a un GameObject en Unity para iniciar el cliente WebSocket.
 /// </summary>
-public class BasicWebSocketClient : MonoBehaviour
+public class ChatWebSocketClient : MonoBehaviour
 {
     private WebSocket ws; // WebSocket del cliente
     private int id; // ID del cliente
