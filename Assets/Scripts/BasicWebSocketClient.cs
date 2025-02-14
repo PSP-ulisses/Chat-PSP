@@ -6,45 +6,53 @@ using UnityEngine;
 using UnityEngine.UI;
 using WebSocketSharp;
 
+/// <summary>
+/// Clase que se adjunta a un GameObject en Unity para iniciar el cliente WebSocket.
+/// </summary>
 public class BasicWebSocketClient : MonoBehaviour
 {
-    // Instancia del cliente WebSocket
-    private WebSocket ws;
-    private int id;
-    private string color;
+    private WebSocket ws; // WebSocket del cliente
+    private int id; // ID del cliente
+    private string color; // Color del cliente
 
+    // Colores para los mensajes
     private readonly List<string> colores = new() { "#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF", "#00FFFF" };
 
     public TMP_Text chatDisplay;  // Texto donde se muestra el historial del chat
     public TMP_InputField inputField; // Input donde el usuario escribe
     public Button sendButton; // Botón para enviar mensajes
     public ScrollRect scrollRect; // Scroll View para manejar el desplazamiento
-    public TMP_Text textID;
-    private readonly Queue<Action> _actionsToRun = new();
+    public TMP_Text textID; // Texto para mostrar el ID del cliente
+    private readonly Queue<Action> _actionsToRun = new(); // Cola de acciones para ejecutar en el hilo principal
 
-    private const int maxRetries = 5; // Número máximo de reintentos
+    private const int maxRetries = 5; // Número máximo de reintentos de conexión
     private const float retryDelay = 2f; // Tiempo de espera entre reintentos en segundos
 
-    // Se ejecuta al iniciar la escena
+    /// <summary>
+    /// Se ejecuta al iniciar la escena.
+    /// </summary>
     void Start()
     {
-        StartCoroutine(Conectar());
+        StartCoroutine(Conectar()); // Conectar al servidor WebSocket
 
-        sendButton.onClick.AddListener(SendMessageToServer);
-        inputField.onSubmit.AddListener(delegate { SendMessageToServer(); });
+        sendButton.onClick.AddListener(SendMessageToServer); // Asignar el método al botón
+        inputField.onSubmit.AddListener(delegate { SendMessageToServer(); }); // Asignar el método al input
 
         // Dar foco automático al input al iniciar
         inputField.Select();
         inputField.ActivateInputField();
 
-        // Limpiar el chatDisplay
-        chatDisplay.text = "";
+        chatDisplay.text = ""; // Limpiar el chat
     }
 
+    /// <summary>
+    /// Método para conectar al servidor WebSocket.
+    /// </summary>
+    /// <returns>Corrutina para la conexión.</returns>
     private IEnumerator Conectar()
     {
-        int attempt = 0;
-        while (attempt < maxRetries)
+        int attempt = 0; // Intento actual de conexión
+        while (attempt < maxRetries) // Mientras no se alcance el número máximo de reintentos
         {
             // Crear una instancia del WebSocket apuntando a la URI del servidor
             ws = new WebSocket("ws://127.0.0.1:7777/");
@@ -52,29 +60,35 @@ public class BasicWebSocketClient : MonoBehaviour
             // Evento OnOpen: se invoca cuando se establece la conexión con el servidor
             ws.OnOpen += (sender, e) => EnqueueUIAction(() =>
             {
-                inputField.enabled = true;
-                ToastNotification.Hide();
-                ToastNotification.Show("Conectado al servidor", "success");
+                inputField.enabled = true; // Habilitar el input
+                ToastNotification.Hide(); // Ocultar notificación de desconexión
+                ToastNotification.Show("Conectado al servidor", "success"); // Mostrar notificación de conexión
             });
 
             // Evento OnMessage: se invoca cuando se recibe un mensaje del servidor
             ws.OnMessage += (sender, e) =>
             {
-                if (e.Data.StartsWith("NewID:"))
+                if (e.Data.StartsWith("NewID:")) // Si el mensaje es una señal de nuevo ID
                 {
-                    id = int.Parse(e.Data[6..]);
+                    id = int.Parse(e.Data[6..]); // Obtener el ID del cliente
+
+                    // Asignar un color aleatorio al cliente
                     System.Random random = new();
                     color = colores[random.Next(0, colores.Count)];
-                    EnqueueUIAction(() => textID.text = "Cliente" + id);
+
+                    EnqueueUIAction(() => textID.text = "Cliente" + id); // Mostrar el ID en la UI
                 }
-                else if (e.Data.StartsWith("desc:"))
+                else if (e.Data.StartsWith("desc:")) // Si el mensaje es una señal de desconexión
                 {
                     EnqueueUIAction(() =>
                         {
                             ToastNotification.Show("Cliente" + e.Data.Split(':')[1] + " se ha desconectado", "info");
-                        });
+                        }); // Mostrar notificación de desconexión
                 }
-                else { PintarMensaje(e.Data); }
+                else // Si el mensaje es un mensaje de chat
+                {
+                    PintarMensaje(e.Data); // Mostrar el mensaje en la UI
+                }
             };
 
             // Evento OnError: se invoca cuando ocurre un error en la conexión
@@ -83,8 +97,8 @@ public class BasicWebSocketClient : MonoBehaviour
             // Evento OnClose: se invoca cuando se cierra la conexión con el servidor
             ws.OnClose += (sender, e) => EnqueueUIAction(() =>
             {
-                inputField.enabled = false;
-                ToastNotification.Show("La conexión está cerrada", 0, "error");
+                inputField.enabled = false; // Deshabilitar el input
+                ToastNotification.Show("La conexión está cerrada", 0, "error"); // Mostrar notificación de desconexión
             });
 
             // Conectar de forma asíncrona al servidor WebSocket
@@ -93,88 +107,107 @@ public class BasicWebSocketClient : MonoBehaviour
             // Esperar un tiempo antes de intentar reconectar
             yield return new WaitForSeconds(retryDelay);
 
-            if (ws.ReadyState == WebSocketState.Open)
+            if (ws.ReadyState == WebSocketState.Open) // Si la conexión se estableció con éxito
             {
-                yield break;
+                yield break; // Salir del bucle
             }
 
-            attempt++;
+            attempt++; // Incrementar el número de intentos
         }
     }
 
-    // Método para enviar un mensaje al servidor (puedes llamarlo, por ejemplo, desde un botón en la UI)
+    /// <summary>
+    /// Método para enviar un mensaje al servidor.
+    /// </summary>
     public void SendMessageToServer()
     {
-        string message = inputField.text;
+        string message = inputField.text; // Obtener el mensaje del input
 
-        if (string.IsNullOrEmpty(message))
+        if (string.IsNullOrEmpty(message)) // Si el mensaje está vacío
         {
-            return;
+            return; // Salir del método
         }
 
-        if (ws != null && ws.ReadyState == WebSocketState.Open)
+        if (ws != null && ws.ReadyState == WebSocketState.Open) // Si el cliente está conectado
         {
-            if (!message.StartsWith("NewID:") && !message.StartsWith("desc:"))
+            if (!message.StartsWith("NewID:") && !message.StartsWith("desc:")) // Si el mensaje no es una señal
             {
-                ws.Send(id + ":" + color + ": " + message);
+                ws.Send(id + ":" + color + ": " + message); // Enviar el mensaje al servidor
             }
-            else
+            else // Si el mensaje es una señal
             {
-                ToastNotification.Show("¡No puedes escribir eso!", 1f, "alert");
+                ToastNotification.Show("¡No puedes escribir eso!", 1f, "alert"); // Mostrar notificación de error
             }
         }
-        else
+        else // Si el cliente no está conectado
         {
-            ToastNotification.Show("El cliente no está conectado.", 5f, "error");
+            ToastNotification.Show("El cliente no está conectado.", 5f, "error"); // Mostrar notificación de error
             Debug.LogError("El cliente no está conectado.");
         }
     }
 
-    // Se ejecuta cuando el objeto se destruye (por ejemplo, al cambiar de escena o cerrar la aplicación)
+    /// <summary>
+    /// Método para desconectar del servidor WebSocket.
+    /// </summary>
     void OnDestroy()
     {
-        if (ws != null)
+        if (ws != null) // Si el cliente está conectado
         {
-            ws.Send("desc:" + id);
-            ws.Close();
+            ws.Send("desc:" + id); // Enviar señal de desconexión
+            ws.Close(); // Cerrar la conexión
             ws = null;
         }
     }
 
+    /// <summary>
+    /// Encolar una acción para ejecutar en el hilo principal.
+    /// </summary>
+    /// <param name="action">Acción a encolar.</param>
     private void EnqueueUIAction(Action action)
     {
-        lock (_actionsToRun)
+        lock (_actionsToRun) // Bloquear la cola para evitar problemas de concurrencia
         {
-            _actionsToRun.Enqueue(action);
+            _actionsToRun.Enqueue(action); // Encolar la acción
         }
     }
 
+    /// <summary>
+    /// Método que se ejecuta en cada frame.
+    /// </summary>
     void Update()
     {
-        if (_actionsToRun.Count > 0)
+        if (_actionsToRun.Count > 0) // Si hay acciones en la cola
         {
             Action action;
 
-            lock (_actionsToRun)
+            lock (_actionsToRun) // Bloquear la cola para evitar problemas de concurrencia
             {
-                action = _actionsToRun.Dequeue();
+                action = _actionsToRun.Dequeue(); // Desencolar la acción
             }
 
-            action?.Invoke();
+            action?.Invoke(); // Ejecutar la acción
         }
     }
 
-    void PintarMensaje(string mensaje)
+    /// <summary>
+    /// Método para mostrar un mensaje en el chat.
+    /// </summary>
+    /// <param name="mensaje">Mensaje a mostrar.</param>
+    void PintarMensaje(string mensaje) // Método para mostrar un mensaje en el chat
     {
+        // Ejecutar en el hilo principal
         EnqueueUIAction(() =>
             {
-                        chatDisplay.text += "\n" + mensaje;
-                        Canvas.ForceUpdateCanvases();
-                        scrollRect.verticalNormalizedPosition = 0f;
-                        inputField.text = "";
-                        inputField.ActivateInputField();
-                        // Forzar actualización del Layout para el Scroll
-                        LayoutRebuilder.ForceRebuildLayoutImmediate(chatDisplay.rectTransform);
-                    });
+                chatDisplay.text += "\n" + mensaje; // Añadir el mensaje al chat
+
+                Canvas.ForceUpdateCanvases(); // Forzar la actualización de los Canvas
+                scrollRect.verticalNormalizedPosition = 0f; // Mover el Scroll al final
+
+                inputField.text = ""; // Limpiar el input
+                inputField.ActivateInputField(); // Activar el input
+
+                // Forzar actualización del Layout para el Scroll
+                LayoutRebuilder.ForceRebuildLayoutImmediate(chatDisplay.rectTransform);
+            });
     }
 }

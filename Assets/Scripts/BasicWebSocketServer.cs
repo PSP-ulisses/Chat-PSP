@@ -12,7 +12,7 @@ public class BasicWebSocketServer : MonoBehaviour
     private WebSocketServer wss; // Servidor WebSocket.
 
     /// <summary>
-    /// Se ejecuta al iniciar el script.
+    /// Se ejecuta al iniciar la escena.
     /// </summary>
     void Start()
     {
