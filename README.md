@@ -26,3 +26,4 @@ Práctica con el objetivo de implementar un chat concurrente mediante WebSocket 
 
 - Notificaciones de tipo toast para varios eventos.
 - Indicación en la UI del identificador de chat asignado.
+- Registro de conversación en archivo de texto.
